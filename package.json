@@ -1,5 +1,5 @@
 {
-  "name": "@decentldotland/public-square-api",
+  "name": "public-square-api",
   "version": "0.0.1",
   "type": "module",
   "description": "an api for the public-square Tribus",

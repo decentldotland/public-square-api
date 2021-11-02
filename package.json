@@ -1,0 +1,26 @@
+{
+  "name": "@decentldotland/public-square-api",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "an api for the public-square Tribus",
+  "main": "./src/api.js",
+  "scripts": {
+    "start": "node ./src/api.js"
+  },
+  "keywords": ["arweave", "social-network", "web3"],
+  "author": "charmful0x",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decentldotland/public-square-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/decentldotland/public-square-api/issues"
+  },
+  "homepage": "https://github.com/decentldotland/public-square-api#readme",
+
+  "dependencies": {
+    "arweave": "^1.10.18",
+    "node-fetch": "^3.0.0"
+  }
+}

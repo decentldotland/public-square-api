@@ -1,6 +1,6 @@
 {
   "name": "public-square-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "description": "an api for the public-square Tribus",
   "main": "./src/api.js",

@@ -31,23 +31,34 @@ export async function getPostsOf(address) {
 }
 
 export async function getFeed() {
-  const feed = {};
+  const feed = [];
 
   try {
     const postsTxs = await getPostsTransactions();
 
     for (let tx of postsTxs) {
+      const txObject = await arweave.transactions.get(tx);
       const txData = await arweave.transactions.getData(tx, {
         decode: true,
         string: true,
       });
-      feed[tx] = txData;
+
+      const owner = txObject["owner"];
+      const poster = await arweave.wallets.ownerToAddress(owner);
+
+      feed.push({
+        id: tx,
+        poster: poster,
+        data: txData,
+      });
     }
+
     return feed;
   } catch (error) {
     console.log(`${error.name}: ${error.message}`);
     process.exit(1);
   }
 }
+
 
 

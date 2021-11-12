@@ -54,6 +54,24 @@ export function postsPerAddressQuerySchema(address) {
   return schema;
 }
 
+export const arweaveSavesQuerySchema = {
+  query: `query {
+  transactions(
+    tags: [
+        { name: "User-Agent", values: "ArweaveChrome/2.3.1"},
+        ]
+    first: 50
+  ) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+`,
+};
+
 export async function gqlTemplate(query) {
   const response = await fetch("https://arweave.net/graphql", {
     method: "POST",

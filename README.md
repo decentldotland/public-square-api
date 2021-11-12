@@ -27,7 +27,14 @@ output:
 
 returns an object of `txid: content` entries:
 ```js
-{ dsjYdFNFRF7YK13FBSw9V5_iBjf6FYbODX8_8XwvcTE: 'hello world! 🐘' }
+[
+  {
+    id: 'dsjYdFNFRF7YK13FBSw9V5_iBjf6FYbODX8_8XwvcTE',
+    poster: 'vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0',
+    data: 'hello world! 🐘'
+  }
+]
+
 
 ```
 
@@ -39,13 +46,11 @@ code:
 const address = "...";
 const postsTxs = await getPostsOf(address);|
 
-console.log(postsTxs)
-
 ```
 
 output:
 
-Array of Arweave data TXIDs
+The same output of `getFeed()` but filtered for a single address.
 
 ## License
 This project is licensed under the MIT license

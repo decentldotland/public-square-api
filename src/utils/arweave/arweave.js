@@ -1,4 +1,5 @@
-import Arweave from "arweave"
+import Arweave from "arweave";
+const utf8decoder = new TextDecoder();
 
 export const arweave = Arweave.init({
   host: "arweave.net",
@@ -15,11 +16,8 @@ export async function _decodePostsData(postsTransactions, knownOwner) {
     for (let tx of postsTransactions) {
       let poster = void 0;
       const txObject = await arweave.transactions.get(tx);
-      const txData = await arweave.transactions.getData(tx, {
-        decode: true,
-        string: true,
-      });
-
+      const txData = utf8decoder.decode(txObject.data);
+      
       if (!knownOwner) {
         const owner = txObject["owner"];
         poster = await arweave.wallets.ownerToAddress(owner);
@@ -30,7 +28,7 @@ export async function _decodePostsData(postsTransactions, knownOwner) {
       feed.push({
         id: tx,
         poster: poster,
-        data: txData,
+        data: JSON.parse(txData),
       });
     }
 

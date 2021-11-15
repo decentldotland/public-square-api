@@ -1,5 +1,5 @@
 import { TOKENIZATION_CONTRACT } from "../constants/contracts.js";
-import fetch from "node-fetch";
+import axios from "axios";
 
 export const postQuerySchema = {
   query: `query {
@@ -73,20 +73,18 @@ export const arweaveSavesQuerySchema = {
 };
 
 export async function gqlTemplate(query) {
-  const response = await fetch("https://arweave.net/graphql", {
-    method: "POST",
+  const response = await axios.post("https://arweave.net/graphql", query, {
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(query),
   });
 
-  const json = await response.json();
   const transactionIds = [];
 
-  const res_arr = json["data"]["transactions"]["edges"];
+  const res_arr = response.data.data.transactions.edges;
 
-  for (let element in Object.values(res_arr)) {
-    transactionIds.push(res_arr[element]["node"]["id"]);
+  for (let element of res_arr) {
+    transactionIds.push(element["node"]["id"]);
   }
-
+  
   return transactionIds;
 }
+

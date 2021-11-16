@@ -9,32 +9,28 @@ export const arweave = Arweave.init({
   logging: false,
 });
 
-export async function _decodePostsData(postsTransactions, knownOwner) {
+export async function _decodePostsData(postsTransactions) {
   const feed = [];
 
   try {
     for (let tx of postsTransactions) {
-      let poster = void 0;
-      const txObject = await arweave.transactions.get(tx);
-      const txData = utf8decoder.decode(txObject.data);
-      
-      if (!knownOwner) {
-        const owner = txObject["owner"];
-        poster = await arweave.wallets.ownerToAddress(owner);
-      } else {
-        poster = knownOwner;
-      }
+      const txData = await arweave.transactions.getData(tx.id, {
+        decode: true,
+        string: true,
+      });
 
       feed.push({
-        id: tx,
-        poster: poster,
+        pid: tx.id,
+        poster: tx.owner,
+        timestamp: tx.timestamp,
         data: JSON.parse(txData),
       });
     }
 
     return feed;
   } catch (error) {
-    console.log(`${error.name}: ${error.message}`);
+    console.log(error);
     process.exit(1);
   }
 }
+

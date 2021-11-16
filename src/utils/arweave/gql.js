@@ -74,8 +74,7 @@ export async function gqlTemplate(query) {
     transactionIds.push({
       id: tx.id,
       owner: tx.owner.address,
-      timestamp: tx.block.timestamp,
-      tags: (tx.tags? tx.tags : [])
+      timestamp: tx.block.timestamp
     });
   }
   

@@ -1,3 +1,15 @@
+<p align="center">
+  <a href="https://decent.land">
+    <img src="./img/logo25.png" height="124">
+  </a>
+  <h3 align="center"><code>@decentdotland/public-square-api</code></h3>
+</p>
+
+
+[![See it on NPM!](https://img.shields.io/npm/v/public-square-api?style=for-the-badge)](https://www.npmjs.com/package/public-square-api)
+[![License](https://img.shields.io/apm/l/vim-mode?style=for-the-badge)]()
+
+
 # public-square-api
 an api for the public-square Protocol
 

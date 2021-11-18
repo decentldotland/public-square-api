@@ -34,3 +34,9 @@ export async function _decodePostsData(postsTransactions) {
   }
 }
 
+export function generateState(address) {
+  const initState = `{"issuer": "${address}","owner": "${address}","name": "PS Post","ticker": "PSP","description": "a post as NFT via decent.land","thumbnail": "","balances": {"${address}": 1}}`;
+  return initState;
+}
+
+

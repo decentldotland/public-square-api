@@ -1,6 +1,7 @@
 import { arweave } from "./utils/arweave/arweave.js";
 import { _validateAddress } from "./utils/arweave/address.js";
 import { _decodePostsData } from "./utils/arweave/arweave.js";
+import { createPost } from "./utils/arweave/arconnect.js";
 import {
   postQuerySchema,
   postsPerAddressQuerySchema,
@@ -21,15 +22,14 @@ export async function getPostsTransactions() {
 
 export async function getPostsOf(address) {
   try {
-    _validateAddress(address);
-    const query = postsPerAddressQuerySchema(address);
+    const poster = _validateAddress(address);
+    const query = postsPerAddressQuerySchema(poster);
     const transactions = await gqlTemplate(query);
     const feed = await _decodePostsData(transactions);
 
     return feed;
   } catch (error) {
     console.log(`${error.name}: ${error.message}`);
-    process.exit(1);
   }
 }
 
@@ -44,6 +44,18 @@ export async function getFeed() {
   } catch (error) {
     console.log(`${error.name}: ${error.message}`);
     process.exit(1);
+  }
+}
+
+export async function post(text, media) {
+  try {
+    const postTxObj = await createPost({
+      text: text,
+      media: media,
+    });
+    return postTxObj;
+  } catch (error) {
+    console.log(`${error.name}: ${error.message}`);
   }
 }
 

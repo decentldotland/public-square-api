@@ -8,7 +8,7 @@ export const postQuerySchema = {
         { name: "Contract-Src", values: "${TOKENIZATION_CONTRACT}"},
         { name: "App-Name", values: "PublicSquare"},
         { name: "Type", values: "post"},
-        { name: "Version", values: "1"},
+        { name: "Version", values: "testnet-v4"},
         { name: "Content-Type", values: "application/json"},
         { name: "App-Name", values: "SmartWeaveContract"}
 
@@ -20,6 +20,7 @@ export const postQuerySchema = {
         id
         owner { address }
         block { timestamp }
+        tags { name value }
       }
     }
   }
@@ -36,7 +37,7 @@ export function postsPerAddressQuerySchema(address) {
         { name: "Contract-Src", values: "${TOKENIZATION_CONTRACT}"},
         { name: "App-Name", values: "PublicSquare"},
         { name: "Type", values: "post"},
-        { name: "Version", values: "1"},
+        { name: "Version", values: "testnet-v4"},
         { name: "Content-Type", values: "application/json"},
         { name: "App-Name", values: "SmartWeaveContract"}
 
@@ -48,6 +49,7 @@ export function postsPerAddressQuerySchema(address) {
         id
         owner { address }
         block { timestamp }
+        tags { name value }
       }
     }
   }
@@ -74,7 +76,9 @@ export async function gqlTemplate(query) {
     transactionIds.push({
       id: tx.id,
       owner: tx.owner.address,
-      timestamp: tx.block.timestamp
+      // pending transactions do not have block value
+      timestamp: tx.block ? tx.block.timestamp : Date.now(),
+      tags: tx.tags ? tx.tags : [],
     });
   }
   

@@ -1,6 +1,6 @@
 {
   "name": "public-square-api",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "description": "an api for the public-square Tribus",
   "main": "./src/api.js",
@@ -22,6 +22,7 @@
   "dependencies": {
     "arweave": "^1.10.18",
     "axios": "^0.24.0",
+    "base64url": "^3.0.1",
     "node-fetch": "^3.0.0"
   }
 }

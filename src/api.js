@@ -1,5 +1,5 @@
 import { arweave } from "./utils/arweave/arweave.js";
-import { _validateAddress } from "./utils/arweave/address.js";
+import { _validateAddress, isParsable } from "./utils/arweave/address.js";
 import { _decodePostsData } from "./utils/arweave/arweave.js";
 import { createPost } from "./utils/arweave/arconnect.js";
 import {
@@ -59,4 +59,27 @@ export async function post(text, media) {
   }
 }
 
+export async function getLazyFeed() {
+  try {
+    const feed = [];
+    const posts = await getPostsTransactions();
 
+    for (let post of posts) {
+      const base64urlTag = post.tags[8]["value"];
+      const encodedContent = base64url.decode(base64urlTag);
+
+      if (isParsable(encodedContent)) {
+        feed.push({
+          pid: post.id,
+          poster: post.owner,
+          timestamp: post.timestamp,
+          data: JSON.parse(encodedContent),
+        });
+      }
+    }
+
+    return feed;
+  } catch (error) {
+    console.log(`${error.name}: ${error.message}`);
+  }
+}

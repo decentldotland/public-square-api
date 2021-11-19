@@ -1,5 +1,6 @@
 import { arweave, generateState } from "./arweave.js";
 import { TOKENIZATION_CONTRACT } from "../constants/contracts.js";
+import base64url from "base64url";
 
 async function connect() {
   if (!window.arweaveWallet) {
@@ -37,34 +38,44 @@ export async function getArAddress() {
 }
 
 export async function createPost({ text = "hello world", media = [] } = {}) {
-  _validateText(text);
+  try {
+    _validateText(text);
 
-  let poster = await getArAddress();
+    if (media.length > 3) {
+      throw new Error("media count too large");
+    }
 
-  if (!poster) {
-    poster = await getArAddress();
-  } else {
-    const content = {
-      text: text,
-      media: media,
-    };
-    const tx = await arweave.createTransaction({
-      data: JSON.stringify(content),
-    });
-    const state = generateState(poster);
+    let poster = await getArAddress();
 
-    tx.addTag("Contract-Src", TOKENIZATION_CONTRACT);
-    tx.addTag("App-Name", "PublicSquare");
-    tx.addTag("Version", "1");
-    tx.addTag("Type", "post");
-    tx.addTag("Content-Type", "application/json");
-    tx.addTag("Init-State", state);
-    tx.addTag("App-Name", "SmartWeaveContract");
-    tx.addTag("App-Version", "0.3.0");
+    if (!poster) {
+      poster = await getArAddress();
+    } else {
+      const content = {
+        text: text,
+        media: media,
+      };
+      const tx = await arweave.createTransaction({
+        data: JSON.stringify(content),
+      });
+      const state = generateState(poster);
+      const base64urlTagValue = base64url(JSON.stringify(content));
 
-    await arweave.transactions.sign(tx);
-    await arweave.transactions.post(tx);
+      tx.addTag("Contract-Src", TOKENIZATION_CONTRACT);
+      tx.addTag("App-Name", "PublicSquare");
+      tx.addTag("Version", "testnet-v4");
+      tx.addTag("Type", "post");
+      tx.addTag("Content-Type", "application/json");
+      tx.addTag("Init-State", state);
+      tx.addTag("App-Name", "SmartWeaveContract");
+      tx.addTag("App-Version", "0.3.0");
+      tx.addTag("lazyAccess", base64urlTagValue);
 
-    return tx;
+      await arweave.transactions.sign(tx);
+      await arweave.transactions.post(tx);
+
+      return tx;
+    }
+  } catch (error) {
+    console.log(`${error.name} : ${error.description}`);
   }
 }

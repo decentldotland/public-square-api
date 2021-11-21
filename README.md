@@ -23,9 +23,9 @@ npm install public-square-api
 
 ### I) get public-square's feed
 
-code:
+#### method 1: data decoded from the TX's `data` property
 ```javascript
-import { getFeed } from "./public-square-api"
+import { getFeed } from "public-square-api"
 
 async function loadTribusFeed() {
     const feed = await getFeed();
@@ -35,16 +35,34 @@ async function loadTribusFeed() {
 
 ```
 
-output:
+#### method 2 (LazyAccess): data decoded from the TX's `lazyAcess` tag
+```javascript
+import { getLazyFeed } from "public-square-api"
 
-returns an object of `txid: content` entries:
+async function loadTribusFeed() {
+    const feed = await getLazyFeed();
+
+    return feed;
+}
+
+```
+
+returns an array of posts metadata objects:
 ```js
 [
   {
-    id: 'dsjYdFNFRF7YK13FBSw9V5_iBjf6FYbODX8_8XwvcTE',
+    pid: 'JzK-8crzmr76Uj7SkiP_XhD6Ig-B8N6OsSSSmOIL3g8',
     poster: 'vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0',
-    data: 'hello world! 🐘'
-  }
+    timestamp: 1637349516,
+    data: { text: 'stonks 📈📈', media: [] }
+  },
+  {
+    pid: 'RfE5vkrluExB7Q-JgPFEr6PbbcWcmtq5emF64QkxN5w',
+    poster: 'vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0',
+    timestamp: 1637349516,
+    data: { text: 'welcome to the PublicSquare! 👋', media: [] }
+  },
+  ...
 ]
 
 
@@ -56,7 +74,7 @@ code:
 ```js
 // assuming the code is async-await
 const address = "...";
-const postsTxs = await getPostsOf(address);|
+const postsTxs = await getPostsOf(address);
 
 ```
 

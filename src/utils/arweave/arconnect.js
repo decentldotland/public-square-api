@@ -21,7 +21,7 @@ function _validateText(text) {
 
   const trimmed = text.trim();
 
-  if (trimmed.length <= 0 || trimmed.length > 280) {
+  if (trimmed.length > 280) {
     throw new Error("text too long/short")
   }
 }
@@ -40,6 +40,10 @@ export async function getArAddress() {
 export async function createPost({ text = "hello world", media = [] } = {}) {
   try {
     _validateText(text);
+
+    if (text.length === 0 && media.length === 0) {
+      throw new Error("empty posts are not allowed")
+    }
 
     if (media.length > 3) {
       throw new Error("media count too large");

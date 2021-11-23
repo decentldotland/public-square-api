@@ -20,13 +20,14 @@ export const postQuerySchema = {
         id
         owner { address }
         block { timestamp }
-        tags { name value }
+        tags  { name value }
       }
     }
   }
 }
 `,
 };
+
 
 export function postsPerAddressQuerySchema(address) {
   const schema = {
@@ -49,7 +50,36 @@ export function postsPerAddressQuerySchema(address) {
         id
         owner { address }
         block { timestamp }
-        tags { name value }
+        tags  { name value }
+      }
+    }
+  }
+}
+`,
+  };
+
+  return schema;
+}
+
+export function repliesOfPostQuerySchema(post_id) {
+  const schema = {
+    query: `query {
+  transactions(
+    tags: [
+        { name: "App-Name", values: "PublicSquare"},
+        { name: "Type", values: "reply"},
+        { name: "reply-to", values: "${post_id}"}
+        { name: "Version", values: "testnet-v4"},
+        { name: "Content-Type", values: "application/json"},
+        ]
+    first: 1000000
+  ) {
+    edges {
+      node {
+        id
+        owner { address }
+        block { timestamp }
+        tags  { name value }
       }
     }
   }

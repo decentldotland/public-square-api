@@ -84,3 +84,57 @@ export async function createPost({ text = "hello world", media = [] } = {}) {
     console.log(`${error.name} : ${error.description}`);
   }
 }
+
+export async function createReply({ text = "hello world", media = [], post_id = "" } = {}) {
+  try {
+    const trimmedText = _validateText(text);
+
+    if (trimmedText.length === 0 && media.length === 0) {
+      throw new Error("empty posts are not allowed")
+    }
+
+    if (media.length > 3) {
+      throw new Error("media count too large");
+    }
+    // if the parent-post ID was not seeded or invalid,
+    // post the reply as main post (Type:post)
+    const validity = /[a-z0-9_-]{43}/i.test(post_id);
+
+    if (!validity) {
+      return await createPost({
+        text: trimmedText,
+        media: media
+      });
+    }
+
+    let poster = await getArAddress();
+
+    if (!poster) {
+      poster = await getArAddress();
+    } else {
+      const content = {
+        text: trimmedText,
+        media: media,
+      };
+      const tx = await arweave.createTransaction({
+        data: JSON.stringify(content),
+      });
+
+      const base64urlTagValue = base64url(JSON.stringify(content));
+
+      tx.addTag("App-Name", "PublicSquare");
+      tx.addTag("Version", "testnet-v4");
+      tx.addTag("Type", "reply");
+      tx.addTag("reply-to", post_id)
+      tx.addTag("Content-Type", "application/json");
+      tx.addTag("lazyAccess", base64urlTagValue);
+
+      await arweave.transactions.sign(tx);
+      await arweave.transactions.post(tx);
+
+      return tx;
+    }
+  } catch (error) {
+    console.log(`${error.name} : ${error.description}`);
+  }
+}

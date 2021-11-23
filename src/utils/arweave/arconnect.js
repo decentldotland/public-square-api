@@ -24,6 +24,7 @@ function _validateText(text) {
   if (trimmed.length > 280) {
     throw new Error("text too long/short")
   }
+  return trimmed;
 }
 
 export async function getArAddress() {
@@ -39,9 +40,9 @@ export async function getArAddress() {
 
 export async function createPost({ text = "hello world", media = [] } = {}) {
   try {
-    _validateText(text);
+    const trimmedText = _validateText(text);
 
-    if (text.length === 0 && media.length === 0) {
+    if (trimmedText.length === 0 && media.length === 0) {
       throw new Error("empty posts are not allowed")
     }
 
@@ -55,7 +56,7 @@ export async function createPost({ text = "hello world", media = [] } = {}) {
       poster = await getArAddress();
     } else {
       const content = {
-        text: text,
+        text: trimmedText,
         media: media,
       };
       const tx = await arweave.createTransaction({

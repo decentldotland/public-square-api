@@ -13,6 +13,8 @@
 # public-square-api
 an api for the public-square Protocol
 
+**_the protocol has no token yet, any associated token's smart contract address is for testing purposes only_**
+
 ## Install
 
 ```
